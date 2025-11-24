@@ -30,8 +30,10 @@ impl ApiError {
         ApiError::Internal(ErrorResponse { error: msg.into() })
     }
 
-    pub fn not_found(msg: impl Into<String>) -> Self {
-        ApiError::NotFound(ErrorResponse { error: msg.into() })
+    pub fn not_found() -> Self {
+        ApiError::NotFound(ErrorResponse {
+            error: "Not Found".into(),
+        })
     }
 
     pub fn bad_request(msg: impl Into<String>) -> Self {
@@ -71,7 +73,7 @@ impl From<RepositoryError> for ApiError {
                 ApiError::internal("Database error")
             }
             RepositoryError::Unauthorized => ApiError::unauthorized(),
-            RepositoryError::NotFound => ApiError::not_found("Not found"),
+            RepositoryError::NotFound => ApiError::not_found(),
             RepositoryError::Validation(msg) => ApiError::bad_request(msg),
             RepositoryError::Other(msg) => {
                 tracing::error!("Unexpected error: {msg}");

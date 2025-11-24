@@ -47,6 +47,7 @@ impl Display for Password {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, FromRow)]
+#[serde(rename_all = "camelCase")]
 pub struct User {
     pub id: i32,
     pub first_name: String,
@@ -59,6 +60,7 @@ pub struct User {
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct CreateUserRequest {
     pub first_name: String,
     pub last_name: String,
@@ -69,6 +71,7 @@ pub struct CreateUserRequest {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UpdateUserRequest {
     pub first_name: String,
     pub last_name: String,
@@ -79,6 +82,7 @@ pub struct UpdateUserRequest {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UserResponse {
     pub id: i32,
     pub first_name: String,
