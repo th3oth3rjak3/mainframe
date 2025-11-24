@@ -1,5 +1,6 @@
 use axum::Json;
 use axum::Router;
+use axum::extract::Path;
 use axum::extract::Query;
 use axum::extract::State;
 use axum::routing::get;
@@ -8,6 +9,7 @@ use serde::{self, Deserialize};
 use crate::auth::AuthUser;
 use crate::errors::ApiError;
 use crate::recipes::Recipe;
+use crate::recipes::RecipeRequest;
 use crate::services::ServiceContainer;
 use crate::shared_models::PaginatedResponse;
 
@@ -56,21 +58,58 @@ pub async fn get_all_recipes(
 }
 
 #[axum::debug_handler]
-pub async fn create_recipe() -> Result<Json<Recipe>, ApiError> {
-    todo!()
+pub async fn get_by_id(
+    auth: AuthUser,
+    Path(id): Path<i32>,
+    State(container): State<ServiceContainer>,
+) -> Result<Json<Recipe>, ApiError> {
+    let recipe = container
+        .recipe_service()
+        .get_by_id(id, auth.user.id)
+        .await?;
+
+    Ok(Json(recipe))
 }
 
 #[axum::debug_handler]
-pub async fn get_by_id() -> Result<Json<Recipe>, ApiError> {
-    todo!()
+pub async fn create_recipe(
+    auth: AuthUser,
+    State(container): State<ServiceContainer>,
+    Json(request): Json<RecipeRequest>,
+) -> Result<Json<Recipe>, ApiError> {
+    let recipe = container
+        .recipe_service()
+        .create_recipe(auth.user.id, request)
+        .await?;
+
+    Ok(Json(recipe))
 }
 
 #[axum::debug_handler]
-pub async fn update_recipe() -> Result<Json<Recipe>, ApiError> {
-    todo!()
+pub async fn update_recipe(
+    auth: AuthUser,
+    State(container): State<ServiceContainer>,
+    Path(id): Path<i32>,
+    Json(request): Json<RecipeRequest>,
+) -> Result<Json<Recipe>, ApiError> {
+    let recipe = container
+        .recipe_service()
+        .update_recipe(id, auth.user.id, request)
+        .await?;
+
+    Ok(Json(recipe))
 }
 
 #[axum::debug_handler]
-pub async fn delete_recipe() -> Result<Json<Recipe>, ApiError> {
-    todo!()
+pub async fn delete_recipe(
+    auth: AuthUser,
+    State(container): State<ServiceContainer>,
+    Path(id): Path<i32>,
+) -> Result<(), ApiError> {
+    container
+        .recipe_service()
+        .delete_recipe(id, auth.user.id)
+        .await?;
+
+    Ok(())
 }

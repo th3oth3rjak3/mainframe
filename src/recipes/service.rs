@@ -3,13 +3,14 @@ use async_trait::async_trait;
 use crate::errors::ApiError;
 use crate::recipes::{
     IIngredientRepository, IInstructionRepository, IRecipeRepository, Ingredient, Instruction,
-    Recipe,
+    Recipe, RecipeRequest,
 };
 use crate::shared_models::PaginatedResponse;
 use std::sync::Arc;
 
 #[async_trait]
 pub trait IRecipeService: Send + Sync {
+    /// Get all recipes that belong to the current user and any recipes that are public.
     async fn get_user_and_public_recipes(
         &self,
         user_id: i32,
@@ -17,6 +18,24 @@ pub trait IRecipeService: Send + Sync {
         page_size: i64,
         name_query: Option<&str>,
     ) -> Result<PaginatedResponse<Recipe>, ApiError>;
+
+    /// Get a recipe by its id.
+    async fn get_by_id(&self, recipe_id: i32, user_id: i32) -> Result<Recipe, ApiError>;
+
+    /// Create a new recipe for the user with the given `user_id`.
+    async fn create_recipe(&self, user_id: i32, request: RecipeRequest)
+    -> Result<Recipe, ApiError>;
+
+    /// Update an existing recipe when the user owns it.
+    async fn update_recipe(
+        &self,
+        recipe_id: i32,
+        user_id: i32,
+        request: RecipeRequest,
+    ) -> Result<Recipe, ApiError>;
+
+    /// Delete a recipe only when the user owns it.
+    async fn delete_recipe(&self, recipe_id: i32, user_id: i32) -> Result<(), ApiError>;
 }
 
 #[derive(Clone)]
@@ -115,5 +134,54 @@ impl IRecipeService for RecipeService {
             total,
             total_pages,
         })
+    }
+
+    async fn get_by_id(&self, recipe_id: i32, user_id: i32) -> Result<Recipe, ApiError> {
+        let recipe = self.recipe_repo.get_by_id(recipe_id).await?;
+
+        if recipe.is_public || recipe.user_id == user_id {
+            Ok(recipe)
+        } else {
+            // If a recipe exists but a user doesn't own it or it isn't public, don't give away that information.
+            // Just tell the user it wasn't found to prevent traversal attacks.
+            Err(ApiError::not_found())
+        }
+    }
+
+    async fn create_recipe(
+        &self,
+        user_id: i32,
+        request: RecipeRequest,
+    ) -> Result<Recipe, ApiError> {
+        let recipe = self.recipe_repo.create(user_id, request).await?;
+        Ok(recipe)
+    }
+
+    async fn update_recipe(
+        &self,
+        recipe_id: i32,
+        user_id: i32,
+        request: RecipeRequest,
+    ) -> Result<Recipe, ApiError> {
+        let recipe = self.recipe_repo.get_by_id(recipe_id).await?;
+        if recipe.user_id != user_id {
+            return Err(ApiError::not_found());
+        }
+
+        let updated = self.recipe_repo.update(recipe_id, request).await?;
+        Ok(updated)
+    }
+
+    async fn delete_recipe(&self, recipe_id: i32, user_id: i32) -> Result<(), ApiError> {
+        let recipe = self.recipe_repo.get_by_id(recipe_id).await?;
+
+        if recipe.user_id != user_id {
+            // If a recipe exists but a user doesn't own it, don't give away that information.
+            // Just tell the user it wasn't found to prevent traversal attacks.
+            return Err(ApiError::not_found());
+        }
+
+        self.recipe_repo.delete(recipe_id).await?;
+        Ok(())
     }
 }
