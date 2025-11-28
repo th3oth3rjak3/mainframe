@@ -1,0 +1,10 @@
+target/
+node_modules/
+.git/
+.github/
+*.md
+Dockerfile
+.dockerignore
+.env*
+.vscode/
+.idea/
