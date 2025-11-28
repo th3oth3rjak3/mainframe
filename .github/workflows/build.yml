@@ -1,0 +1,94 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Setup Node.js and pnpm for Vue.js
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 8
+        run_install: false
+
+    - name: Get pnpm store directory
+      shell: bash
+      run: |
+        echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+    - name: Setup pnpm cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ env.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
+
+    # Build Vue.js project
+    - name: Install dependencies
+      run: pnpm install
+
+    - name: Build Vue.js project
+      run: pnpm run build
+
+    # Setup Rust
+    - name: Setup Rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        components: clippy, rustfmt
+
+    - name: Setup Rust cache
+      uses: Swatinem/rust-cache@v2
+
+    # Rust formatting check
+    - name: Check Rust formatting
+      run: cargo fmt --all -- --check
+
+    # Strict Clippy lints
+    - name: Run Clippy with strict lints
+      run: |
+        cargo clippy --all-targets --all-features -- \
+          -D warnings \
+          -D clippy::unwrap_used \
+          -D clippy::expect_used \
+          -D clippy::panic \
+          -D clippy::unimplemented \
+          -D clippy::todo \
+          -D clippy::unreachable \
+          -D clippy::unwrap_in_result \
+          -D clippy::indexing_slicing \
+          -D clippy::integer_arithmetic \
+          -D clippy::float_arithmetic \
+          -D clippy::as_conversions \
+          -D clippy::clone_on_ref_ptr \
+          -D clippy::dbg_macro \
+          -D clippy::print_stdout \
+          -D clippy::print_stderr \
+          -W clippy::pedantic \
+          -W clippy::nursery
+
+    # Build Rust project
+    - name: Build Rust project
+      run: cargo build --verbose --release
+
+    # Run tests
+    - name: Run Rust tests
+      run: cargo test --verbose
