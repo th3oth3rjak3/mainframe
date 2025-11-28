@@ -2,7 +2,7 @@
   "name": "mainframe",
   "private": true,
   "type": "module",
-  "version": "0.1.3",
+  "version": "0.0.1",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "dev": "vite",
