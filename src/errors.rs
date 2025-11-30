@@ -65,6 +65,12 @@ impl Display for ApiError {
     }
 }
 
+impl From<anyhow::Error> for ApiError {
+    fn from(value: anyhow::Error) -> Self {
+        Self::internal(value.to_string())
+    }
+}
+
 impl From<RepositoryError> for ApiError {
     fn from(err: RepositoryError) -> Self {
         match err {

@@ -30,5 +30,15 @@ uuid = { version = "1.18.1", features = ["serde", "v4"] }
 
 
 [lints.clippy]
-nursery = "deny"
-pedantic = "deny"
+# Lint groups
+nursery = { level = "deny", priority = -1 }
+pedantic = { level = "deny", priority = -1 }
+
+# Explicit correctness / safety lints
+unwrap_used = "deny"
+expect_used = "deny"
+cast_possible_truncation = "deny"
+cast_possible_wrap = "deny"
+cast_precision_loss = "deny"
+arithmetic_side_effects = "deny"
+items_after_statements = "deny"
