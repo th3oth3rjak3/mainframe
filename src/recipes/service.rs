@@ -68,6 +68,10 @@ impl IRecipeService for RecipeService {
         page_size: i64,
         name_query: Option<&str>,
     ) -> Result<PaginatedResponse<Recipe>, ApiError> {
+        if page_size <= 0 {
+            return Err(ApiError::bad_request("page size must be > 0"));
+        }
+
         // Get paginated recipe bases and total count from repository
         let (recipe_bases, total) = self
             .recipes
@@ -125,6 +129,8 @@ impl IRecipeService for RecipeService {
             })
             .collect();
 
+        // We verified that page_size is non-zero above.
+        #[allow(clippy::arithmetic_side_effects)]
         let total_pages = (total + page_size - 1) / page_size;
 
         Ok(PaginatedResponse {

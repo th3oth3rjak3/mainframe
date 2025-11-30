@@ -64,7 +64,7 @@ impl IRecipeRepository for SqlxRecipeRepository {
         page_size: i64,
         name_query: Option<&str>,
     ) -> Result<(Vec<RecipeBase>, i64), RepositoryError> {
-        let offset = (page - 1) * page_size;
+        let offset = page.saturating_sub(1).saturating_mul(page_size);
 
         let total: i64 = sqlx::query_scalar!(
             "SELECT COUNT(*) FROM recipes.recipes

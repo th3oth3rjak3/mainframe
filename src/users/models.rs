@@ -1,11 +1,11 @@
-use std::fmt::Display;
-
+use anyhow::anyhow;
 use argon2::{
     PasswordHash, PasswordHasher, PasswordVerifier,
     password_hash::{SaltString, rand_core::OsRng},
 };
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
+use std::fmt::Display;
 use time::OffsetDateTime;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, sqlx::Type)]
@@ -13,14 +13,14 @@ use time::OffsetDateTime;
 pub struct Password(String);
 
 impl Password {
-    pub fn new(raw_password: &str) -> Self {
+    pub fn new(raw_password: &str) -> Result<Self, anyhow::Error> {
         let salt = SaltString::generate(&mut OsRng);
         let argon2 = argon2::Argon2::default();
         let hash = argon2
             .hash_password(raw_password.as_bytes(), &salt)
-            .unwrap();
+            .map_err(|err| anyhow!(err))?;
 
-        Self(hash.to_string())
+        Ok(Self(hash.to_string()))
     }
 
     pub fn verify(&self, candidate: &[u8]) -> bool {
@@ -107,18 +107,20 @@ impl From<User> for UserResponse {
     }
 }
 
-impl From<CreateUserRequest> for User {
-    fn from(request: CreateUserRequest) -> Self {
-        Self {
+impl TryFrom<CreateUserRequest> for User {
+    type Error = anyhow::Error;
+
+    fn try_from(request: CreateUserRequest) -> Result<Self, Self::Error> {
+        Ok(Self {
             id: 0,
             first_name: request.first_name,
             last_name: request.last_name,
             email: request.email,
             username: request.username,
-            password: Password::new(&request.raw_password),
+            password: Password::new(&request.raw_password)?,
             last_login: None,
             is_admin: request.is_admin,
-        }
+        })
     }
 }
 
@@ -140,14 +142,14 @@ mod tests {
     #[test]
     pub fn test_creating_password_not_raw_string() {
         let raw_pw = "hunter2";
-        let pw = Password::new(raw_pw);
+        let pw = Password::new(raw_pw).unwrap();
         assert_ne!(pw.0, String::from(raw_pw));
     }
 
     #[test]
     pub fn password_verification_succeeds_when_same() {
         let raw_pw = "hunter2";
-        let pw = Password::new(raw_pw);
+        let pw = Password::new(raw_pw).unwrap();
         let valid = pw.verify(b"hunter2");
         assert!(valid);
     }
@@ -155,7 +157,7 @@ mod tests {
     #[test]
     pub fn password_verification_fails_when_different() {
         let raw_pw = "hunter2";
-        let pw = Password::new(raw_pw);
+        let pw = Password::new(raw_pw).unwrap();
         let valid = pw.verify(b"hunter123");
         assert!(!valid);
     }
@@ -167,7 +169,7 @@ mod tests {
         let argon2 = Argon2::default();
         let password_hash = argon2.hash_password(password, &salt).unwrap().to_string();
 
-        println!("Admin password hash: {}", password_hash);
+        println!("Admin password hash: {password_hash}");
         // Copy this hash to your migration
     }
 }

@@ -54,7 +54,7 @@ impl IUserService for UserService {
     }
 
     async fn create(&self, request: CreateUserRequest) -> Result<UserResponse, ApiError> {
-        let mut new_user: User = request.into();
+        let mut new_user: User = request.try_into()?;
         let id = self.user_repo.create(&new_user).await?;
         new_user.id = id;
         Ok(new_user.into())
@@ -68,7 +68,8 @@ impl IUserService for UserService {
         existing.username = request.username;
         existing.is_admin = request.is_admin;
         if let Some(pw) = request.raw_password {
-            existing.password = Password::new(&pw);
+            let new_pw = Password::new(&pw).map_err(|err| ApiError::internal(err.to_string()))?;
+            existing.password = new_pw;
         }
 
         self.user_repo.update(&existing).await?;
