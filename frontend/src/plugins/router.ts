@@ -8,10 +8,6 @@ import { useUserStore } from '@/stores/user';
 const routes: RouteRecordRaw[] = [
     {
         path: '/',
-        redirect: '/login',
-    },
-    {
-        path: '/dashboard',
         name: 'Dashboard',
         component: DashboardPage,
     },
@@ -43,13 +39,19 @@ const router = createRouter({
     routes
 });
 
-
-router.beforeEach((to) => {
+router.beforeEach(async (to, from) => {
     const auth = useUserStore();
+    if (!auth.isLoggedIn && from.name === undefined) {
+        await auth.hydrateUser();
+    } 
 
     // Allow users to login when not yet logged in.
     if (!auth.isLoggedIn && to.name === 'Login') {
         return true;
+    }
+
+    if (auth.isLoggedIn && to.name === 'Login') {
+        return false;
     }
 
     // Force users to login to use the site.
