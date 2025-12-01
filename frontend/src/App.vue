@@ -13,7 +13,7 @@
                 <v-app-bar-title>Mainframe</v-app-bar-title>
             </v-app-bar>
             <v-navigation-drawer v-if="userStore.isLoggedIn" v-model="drawerOpen">
-                <v-list-item link to="/dashboard" title="Dashboard" />
+                <v-list-item link to="/" title="Dashboard" />
                 <v-divider />
                 <v-list-item link to="/recipes" title="Recipes" />
                 <!-- <v-list-item link to="/shopping" title="Shopping Lists" /> -->
