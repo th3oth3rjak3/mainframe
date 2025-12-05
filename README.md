@@ -18,6 +18,7 @@ This project is a collection of applications I'm building for my own use. It's a
 
 ## Tech Stack
 
+- **Frontend**: Blazor WebAssembly, MudBlazor
 - **Backend**: ASP.NET Core, Entity Framework Core
 - **Database**: PostgreSQL / SQLite
 - **Authentication**: Cookie-based with database sessions
