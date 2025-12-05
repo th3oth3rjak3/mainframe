@@ -1,0 +1,7 @@
+﻿services:
+  mainframe.server:
+    image: mainframe.server
+    build:
+      context: .
+      dockerfile: Source/Server/Mainframe.Server/Dockerfile
+
