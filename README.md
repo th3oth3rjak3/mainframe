@@ -27,8 +27,8 @@ This project is a collection of applications I'm building for my own use. It's a
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/mainframe.git
-cd mainframe
+git clone https://github.com/th3oth3rjak3/Mainframe.git
+cd Mainframe
 
 # Restore dependencies
 dotnet restore
