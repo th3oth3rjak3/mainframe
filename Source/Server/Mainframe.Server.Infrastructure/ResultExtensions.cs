@@ -1,5 +1,3 @@
-using Functional;
-
 using Mainframe.Server.Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -17,7 +15,7 @@ public static class ResultExtensions
             error =>
             {
                 logger.LogError(error, "{Error}", error.Message);
-                
+
                 return error switch
                 {
                     AuthenticationRequiredException => Results.Unauthorized(),
@@ -25,7 +23,7 @@ public static class ResultExtensions
                     BadRequestException => Results.BadRequest(new { error = error.Message }),
                     NotFoundException => Results.NotFound(new { error = error.Message }),
                     _ => Results.Problem(
-                        detail: "An unexpected error occurred",
+                        "An unexpected error occurred",
                         statusCode: StatusCodes.Status500InternalServerError)
                 };
             });
