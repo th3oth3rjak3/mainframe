@@ -8,10 +8,9 @@ public class AuthContextFactory : IDesignTimeDbContextFactory<AuthContext>
     public AuthContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<AuthContext>();
-
-        var solutionRoot = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..");
-        var dbPath = Path.Combine(solutionRoot, "Mainframe.db");
-        optionsBuilder.UseSqlite($"Data Source={dbPath}");
+        var connectionString = AuthModule.GetConnectionString();
+        Console.WriteLine($"Connection String: '{connectionString}'");
+        optionsBuilder.UseSqlite(connectionString);
 
         return new AuthContext(optionsBuilder.Options);
     }

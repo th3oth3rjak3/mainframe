@@ -11,21 +11,33 @@ public static class ResultExtensions
         ILogger logger)
     {
         return result.Match(
-        Results.Ok,
-        error =>
-        {
-            logger.LogError(error, "{Error}", error.Message);
-
-            return error switch
+            Results.Ok,
+            error =>
             {
-                AuthenticationRequiredException => Results.Unauthorized(),
-                UnauthorizedUserException => Results.Forbid(),
-                BadRequestException => Results.BadRequest(new { error = error.Message }),
-                NotFoundException => Results.NotFound(new { error = error.Message }),
-                _ => Results.Problem(
-                "An unexpected error occurred",
-                statusCode: StatusCodes.Status500InternalServerError)
-            };
-        });
+                LogException(error, logger);
+
+                return error switch
+                {
+                    AuthenticationRequiredException => Results.Unauthorized(),
+                    UnauthorizedUserException => Results.Forbid(),
+                    BadRequestException => Results.BadRequest(new { error = error.Message }),
+                    NotFoundException => Results.NotFound(new { error = error.Message }),
+                    _ => Results.Problem(
+                        "An unexpected error occurred",
+                        statusCode: StatusCodes.Status500InternalServerError)
+                };
+            });
+    }
+
+    private static void LogException(Exception exn, ILogger logger)
+    {
+        var level = exn switch
+        {
+            AuthenticationRequiredException or UnauthorizedUserException => LogLevel.Warning,
+            BadRequestException or NotFoundException => LogLevel.Information,
+            _ => LogLevel.Error
+        };
+
+        logger.Log(level, "{Error}", exn);
     }
 }

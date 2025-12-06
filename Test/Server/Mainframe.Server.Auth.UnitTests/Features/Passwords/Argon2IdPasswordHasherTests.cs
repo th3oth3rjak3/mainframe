@@ -1,14 +1,15 @@
 ﻿using Mainframe.Server.Auth.Features.Passwords;
+using Xunit.Abstractions;
 
 namespace Mainframe.Server.Auth.UnitTests.Features.Passwords;
 
-public class Argon2IdPasswordHasherTests
+public class Argon2IdPasswordHasherTests(ITestOutputHelper testOutputHelper)
 {
     [Fact]
     public void PasswordHasher_ShouldError_WhenInputsInvalid()
     {
         var hasher = new Argon2IdPasswordHasher();
-        // Should be err variant.
+        // Should be an err variant.
         var err = hasher.Hash("").UnwrapError();
         Assert.IsType<ArgumentException>(err);
 
@@ -60,5 +61,13 @@ public class Argon2IdPasswordHasherTests
         Assert.False(hasher.Verify(hash, ""));
         Assert.False(hasher.Verify(hash, null!));
         Assert.False(hasher.Verify(hash, rawPassword.ToUpper()));
+    }
+
+    [Fact]
+    public void Generate_PasswordHash()
+    {
+        var hasher = new Argon2IdPasswordHasher();
+        var hash = hasher.Hash("admin").Unwrap();
+        testOutputHelper.WriteLine(hash.Value);
     }
 }

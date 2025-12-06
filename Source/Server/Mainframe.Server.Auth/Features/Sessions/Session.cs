@@ -26,7 +26,7 @@ public class Session
     /// <param name="sessionDuration">The length of the session duration.</param>
     public void Slide(TimeSpan sessionDuration = default)
     {
-        var duration = sessionDuration == default ? TimeSpan.FromHours(2) : sessionDuration;
+        var duration = sessionDuration == TimeSpan.Zero ? TimeSpan.FromHours(2) : sessionDuration;
         ExpiresAt = DateTime.UtcNow.Add(duration);
     }
 }
