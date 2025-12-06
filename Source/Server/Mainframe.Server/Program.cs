@@ -1,12 +1,11 @@
 using Mainframe.Server.Auth;
 using Mainframe.Server.Recipes;
-
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
-builder.Services.AddAuthModule();
+builder.Services.AddAuthModule(builder.Configuration);
 builder.Services.AddRecipesModule();
 
 var app = builder.Build();

@@ -44,7 +44,7 @@ public class SessionTests
         var session = new Session(1);
         var now = DateTime.UtcNow;
 
-        session.Slide(); // Default is 2 hours.
+        session.Slide();// Default is 2 hours.
 
         var low = now.AddHours(2).AddMinutes(-1);
         var high = now.AddHours(2).AddMinutes(1);

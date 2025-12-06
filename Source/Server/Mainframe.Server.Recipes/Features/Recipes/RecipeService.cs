@@ -12,13 +12,10 @@ public class RecipeService : IRecipeService
             Name = name,
             CreatedAt = DateTime.UtcNow
         };
-        
+
         Recipes.Add(recipe);
         return Task.FromResult(recipe);
     }
 
-    public Task<List<Recipe>> GetAllAsync(CancellationToken ct)
-    {
-        return Task.FromResult(Recipes.ToList());
-    }
+    public Task<List<Recipe>> GetAllAsync(CancellationToken ct) => Task.FromResult(Recipes.ToList());
 }

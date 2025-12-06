@@ -4,7 +4,8 @@ A personal mono-repository containing multiple applications for my daily workflo
 
 ## Overview
 
-This project is a collection of applications I'm building for my own use. It's a work in progress with new features and apps being added as I identify needs in my personal workflow.
+This project is a collection of applications I'm building for my own use. It's a work in progress with new features and
+apps being added as I identify needs in my personal workflow.
 
 ## Applications
 
@@ -43,9 +44,10 @@ dotnet run
 
 ## Development Status
 
-🚧 **This project is in active development for personal use.** 
+🚧 **This project is in active development for personal use.**
 
-Features are implemented as needed, and the scope may change based on my requirements. Feel free to explore the code, but expect frequent changes and incomplete features.
+Features are implemented as needed, and the scope may change based on my requirements. Feel free to explore the code,
+but expect frequent changes and incomplete features.
 
 ## License
 

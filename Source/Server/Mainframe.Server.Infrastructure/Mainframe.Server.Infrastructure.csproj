@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="CSharp.Made.Functional" Version="3.0.0" />
+        <PackageReference Include="CSharp.Made.Functional" Version="3.0.0"/>
     </ItemGroup>
 
 </Project>

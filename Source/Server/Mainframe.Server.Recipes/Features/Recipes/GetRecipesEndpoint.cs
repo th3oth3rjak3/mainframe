@@ -7,14 +7,13 @@ namespace Mainframe.Server.Recipes.Features.Recipes;
 
 public class GetRecipesEndpoint : IEndpoint
 {
-    public record Response(Guid Id, string Name, DateTime CreatedAt);
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("/", HandleAsync)
             .WithName("GetRecipes")
             .WithTags("Recipes")
-            .Produces<List<Response>>(StatusCodes.Status200OK);
+            .Produces<List<Response>>();
     }
 
     private async Task<IResult> HandleAsync(
@@ -26,4 +25,6 @@ public class GetRecipesEndpoint : IEndpoint
             .ToList();
         return Results.Ok(response);
     }
+
+    public record Response(Guid Id, string Name, DateTime CreatedAt);
 }

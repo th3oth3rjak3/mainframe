@@ -22,7 +22,7 @@ public static class RecipesModule
             .WithTags("Recipes");
 
         group.MapEndpointsFromAssembly(Assembly.GetExecutingAssembly());
-        
+
         return app;
     }
 }
