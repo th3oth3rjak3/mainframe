@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            UPDATE users \n            SET last_login = ?, \n            failed_login_attempts = ?, \n            last_failed_login_attempt = ?, \n            updated_at = ? \n            WHERE id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 5
+    },
+    "nullable": []
+  },
+  "hash": "2826ff4deafcacf8f503e4ccf7cab5dbcf0b959f0caac3adbf79e462cfa36eff"
+}
