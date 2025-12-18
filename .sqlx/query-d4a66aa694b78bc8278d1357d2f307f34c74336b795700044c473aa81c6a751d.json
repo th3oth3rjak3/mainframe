@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            SELECT\n                r.id AS \"id: uuid::Uuid\",\n                r.name\n            FROM roles r\n            INNER JOIN user_roles ur\n                ON r.id = ur.role_id\n            WHERE ur.user_id = ?\n            ",
+  "describe": {
+    "columns": [
+      {
+        "name": "id: uuid::Uuid",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "name",
+        "ordinal": 1,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "d4a66aa694b78bc8278d1357d2f307f34c74336b795700044c473aa81c6a751d"
+}

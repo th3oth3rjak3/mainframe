@@ -1,0 +1,62 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT \n                id as \"id: uuid::Uuid\",\n                user_id as \"user_id: uuid::Uuid\",\n                author,\n                name,\n                description,\n                difficulty,\n                estimated_duration,\n                is_public\n            FROM recipes\n            WHERE (user_id = ? OR is_public = true)\n            AND (? IS NULL OR name LIKE '%' || ? || '%')\n            ORDER BY name ASC\n            LIMIT ? OFFSET ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id: uuid::Uuid",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "user_id: uuid::Uuid",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "author",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "name",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "description",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "difficulty",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "estimated_duration",
+        "ordinal": 6,
+        "type_info": "Text"
+      },
+      {
+        "name": "is_public",
+        "ordinal": 7,
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Right": 5
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "c754db45f1c34a2016e096f37f896a79e839725f213829aea1b26f1a7f12c7c1"
+}

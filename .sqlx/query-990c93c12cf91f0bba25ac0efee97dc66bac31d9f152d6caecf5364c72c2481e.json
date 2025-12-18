@@ -1,0 +1,38 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT\n                id as \"id: uuid::Uuid\",\n                recipe_id as \"recipe_id: uuid::Uuid\",\n                position,\n                description\n            FROM recipe_instructions \n            WHERE recipe_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id: uuid::Uuid",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "recipe_id: uuid::Uuid",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "position",
+        "ordinal": 2,
+        "type_info": "Integer"
+      },
+      {
+        "name": "description",
+        "ordinal": 3,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "990c93c12cf91f0bba25ac0efee97dc66bac31d9f152d6caecf5364c72c2481e"
+}
