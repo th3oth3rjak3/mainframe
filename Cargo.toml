@@ -94,7 +94,6 @@ features = [ "serde", "v7" ]
 [lints.clippy]
 unwrap_used = "deny"
 expect_used = "deny"
-needless_for_each = "warn"
 
 
 [lints.clippy.nursery]
@@ -105,3 +104,8 @@ priority = -1
 [lints.clippy.pedantic]
 level = "deny"
 priority = -1
+
+
+[patch.crates-io.utoipa]
+git = "https://github.com/raimannma/utoipa.git"
+rev = "47aa9ff215db156b6cfe687cab858360c6fe4275"
