@@ -3,3 +3,4 @@
 mainframe.db
 mainframe.db*
 *.local
+.env
