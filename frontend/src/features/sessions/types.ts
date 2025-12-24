@@ -1,9 +1,10 @@
-import * as v from "valibot";
+import * as z from "zod";
+
 import { UserBaseSchema } from "../users/types";
 
-export const SessionSummarySchema = v.object({
+export const SessionSummarySchema = z.object({
   user: UserBaseSchema,
-  activeSessions: v.number(),
+  activeSessions: z.number().int(),
 });
 
-export type SessionSummary = v.InferOutput<typeof SessionSummarySchema>;
+export type SessionSummary = z.infer<typeof SessionSummarySchema>;

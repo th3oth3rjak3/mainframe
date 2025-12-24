@@ -1,7 +1,7 @@
 import { useSessionStore } from "@/features/sessions/stores/session_store";
 import { useEffect, useState } from "react";
 import type { SessionSummary } from "../types";
-import { ValiError } from "valibot";
+import * as z from "zod";
 import { toast } from "sonner";
 import { DataTable } from "@/components/ui/data_table";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -58,8 +58,8 @@ export default function SessionsList() {
     getSessionSummaries()
       .then((summaries) => setSessions(summaries))
       .catch((err) => {
-        if (err instanceof ValiError) {
-          toast.error("Session data was in the wrong format");
+        if (err instanceof z.ZodError) {
+          toast.error(z.prettifyError(err));
         } else if (err instanceof Error) {
           toast.error(err.message);
         } else {

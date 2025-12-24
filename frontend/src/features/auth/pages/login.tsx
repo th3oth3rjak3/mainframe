@@ -13,7 +13,7 @@ import { useAuthStore } from "@/features/auth/stores/auth_store";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
-import { valibotResolver } from "@hookform/resolvers/valibot";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginRequestSchema, type LoginRequest } from "@/features/auth/types";
 import { toast } from "sonner";
 
@@ -27,7 +27,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<LoginRequest>({
-    resolver: valibotResolver(LoginRequestSchema),
+    resolver: zodResolver(LoginRequestSchema),
     defaultValues: {
       username: "",
       password: "",

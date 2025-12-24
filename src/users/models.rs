@@ -115,6 +115,7 @@ pub struct CreateUserRequest {
     pub email: String,
     pub username: String,
     pub raw_password: String,
+    #[serde(with = "time::serde::rfc3339")]
     pub password_expiration: OffsetDateTime,
 }
 

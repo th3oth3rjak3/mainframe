@@ -4,7 +4,9 @@ import type { UserBase } from "../types";
 import { toast } from "sonner";
 import type { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/ui/data_table";
-import { ValiError } from "valibot";
+import CreateUserDialog from "../components/create_user_dialog";
+import z, { ZodError } from "zod";
+import NewUserEmailTemplateDialog from "../components/new_user_email_template_dialog";
 
 const columns: ColumnDef<UserBase>[] = [
   {
@@ -43,12 +45,16 @@ export default function UsersList() {
   const getAllUsers = useUserStore((store) => store.getAllUsers);
   const [users, setUsers] = useState<UserBase[]>([]);
 
+  const onCreated = () => {
+    console.log("we created a new user");
+  };
+
   useEffect(() => {
     getAllUsers()
       .then((u) => setUsers(u))
       .catch((err) => {
-        if (err instanceof ValiError) {
-          toast.error("User data was in the wrong format");
+        if (err instanceof ZodError) {
+          toast.error(z.prettifyError(err));
         } else if (err instanceof Error) {
           toast.error(err.message);
         } else {
@@ -58,5 +64,13 @@ export default function UsersList() {
       });
   }, [getAllUsers]);
 
-  return <DataTable data={users} columns={columns} showColumnSelector filterable />;
+  return (
+    <>
+      <div className="flex gap-x-2">
+        <CreateUserDialog onCreated={onCreated} />
+        <NewUserEmailTemplateDialog />
+      </div>
+      <DataTable data={users} columns={columns} showColumnSelector filterable />
+    </>
+  );
 }

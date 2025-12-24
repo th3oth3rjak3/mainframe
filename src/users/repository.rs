@@ -132,7 +132,7 @@ impl IUserRepository for SqlxUserRepository {
             user.password_hash,
             user.password_expiration,
         )
-        .fetch_one(&self.pool)
+        .execute(&self.pool)
         .await?;
 
         Ok(())
