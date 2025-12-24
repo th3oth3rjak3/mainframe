@@ -1,14 +1,14 @@
 import ky from "ky";
-import * as v from "valibot";
+import * as z from "zod";
 
 /**
  * Error response schema matching the backend ErrorResponse struct
  */
-export const ErrorResponseSchema = v.object({
-  error: v.string(),
+export const ErrorResponseSchema = z.object({
+  error: z.string(),
 });
 
-export type ErrorResponse = v.InferOutput<typeof ErrorResponseSchema>;
+export type ErrorResponse = z.infer<typeof ErrorResponseSchema>;
 
 /**
  * httpClient is used to make HTTP requests to the backend API.
@@ -32,14 +32,14 @@ export const httpClient = ky.create({
         const { response } = error;
         if (response && response.body) {
           const body = await response.json();
-          const errorResponse = v.safeParse(ErrorResponseSchema, body);
-          if (errorResponse.success) {
-            error.message = errorResponse.output.error;
+          const errorResponse = ErrorResponseSchema.safeParse(body);
+          if (errorResponse.error) {
+            error.message = z.prettifyError(errorResponse.error);
           }
         }
 
         return error;
-      }
-    ]
-  }
+      },
+    ],
+  },
 });
