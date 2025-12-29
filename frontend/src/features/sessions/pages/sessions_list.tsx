@@ -5,6 +5,7 @@ import * as z from "zod";
 import { toast } from "sonner";
 import { DataTable } from "@/components/ui/data_table";
 import type { ColumnDef } from "@tanstack/react-table";
+import { PageHeader } from "@/components/ui/page_header";
 
 const columns: ColumnDef<SessionSummary>[] = [
   {
@@ -69,5 +70,10 @@ export default function SessionsList() {
       });
   }, [getSessionSummaries]);
 
-  return <DataTable data={sessions} columns={columns} showColumnSelector filterable />;
+  return (
+    <>
+      <PageHeader title="Sessions" description="All active login sessions" />
+      <DataTable data={sessions} columns={columns} showColumnSelector filterable />
+    </>
+  );
 }
