@@ -5,6 +5,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/ui/data_table";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
+import { PageHeader } from "@/components/ui/page_header";
 
 const columns: ColumnDef<Role>[] = [
   {
@@ -20,6 +21,7 @@ const columns: ColumnDef<Role>[] = [
     header: ({ column }) => {
       return (
         <Button
+          type="button"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -39,5 +41,10 @@ export default function RolesList() {
     initializeRoleStore();
   }, [initializeRoleStore]);
 
-  return <DataTable columns={columns} data={roles} showColumnSelector filterable />;
+  return (
+    <>
+      <PageHeader title="Roles" description="All roles available in the system" />
+      <DataTable columns={columns} data={roles} showColumnSelector filterable />
+    </>
+  );
 }

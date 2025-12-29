@@ -49,6 +49,7 @@ export const CreateUserRequestSchema = z
     rawPassword: PasswordSchema,
     confirmPassword: PasswordSchema,
     passwordExpiration: z.date(),
+    roles: z.array(z.uuidv7()),
   })
   .refine((data) => data.rawPassword === data.confirmPassword, {
     error: "passwords must match",

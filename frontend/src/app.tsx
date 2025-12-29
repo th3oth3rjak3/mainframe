@@ -16,6 +16,7 @@ function App() {
   const Dashboard = lazy(() => import("@/pages/dashboard"));
   const RolesList = lazy(() => import("@/features/roles/pages/roles_list"));
   const UsersList = lazy(() => import("@/features/users/pages/users_list"));
+  const CreateUser = lazy(() => import("@/features/users/pages/create_user"));
   const RecipesList = lazy(() => import("@/features/recipes/pages/recipes_list"));
   const SessionsList = lazy(() => import("@/features/sessions/pages/sessions_list"));
 
@@ -50,6 +51,7 @@ function App() {
               {/* Users */}
               <Route path="/users">
                 <Route path="" element={<UsersList />} />
+                <Route path="create" element={<CreateUser />} />
               </Route>
 
               {/* Recipes */}
