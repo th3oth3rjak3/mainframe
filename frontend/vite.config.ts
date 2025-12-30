@@ -8,7 +8,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   build: {
-    outDir: "../cmd/api/web"
+    outDir: "dist"
   },
   resolve: {
     alias: {
