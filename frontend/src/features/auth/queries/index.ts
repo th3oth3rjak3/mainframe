@@ -1,5 +1,5 @@
 import { queryOptions, useMutation, useQueryClient } from "@tanstack/react-query";
-import { login, logout, fetchCurrentUser } from "@/features/auth/api/auth";
+import { login, logout, fetchCurrentUser } from "@/features/auth/api";
 import { useNavigate } from "@tanstack/react-router";
 
 export const currentUserQueryOptions = queryOptions({
