@@ -14,7 +14,7 @@ export const publicLayoutRoute = createRoute({
       <Suspense fallback={<p>Loading...</p>}>
         <Outlet />
       </Suspense>
-      <TanStackRouterDevtools />
+      <TanStackRouterDevtools position="bottom-right" />
     </ThemeProvider>
   ),
 });
